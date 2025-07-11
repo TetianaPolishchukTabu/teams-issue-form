@@ -21,7 +21,14 @@
         <option>Other</option>
       </select>
     </label><br>
-    <label>Issue explanation:<br><textarea name="issue" required></textarea></label><br>
+    <label>Issue explanation:</label>
+<div id="issue" contenteditable="true" style="
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  min-height: 100px;
+  background: #fff;
+"></div>
     <label><input type="checkbox" name="skip"> Skip this row</label><br><br>
     <button type="submit">Send</button>
   </form>
