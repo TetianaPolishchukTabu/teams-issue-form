@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Issue Form</title>
+</head>
+<body>
+  <h2>Issue Submission Form</h2>
+  <form action="https://example.com/submit" method="post">
+    <label>Project:<br><input type="text" name="project"></label><br>
+    <label>Cadmatic Hull:<br><input type="text" name="hull"></label><br>
+    <label>Block №:<br><input type="text" name="block"></label><br>
+    <label>Content Type:<br>
+      <select name="type">
+        <option>Settings</option>
+        <option>Model</option>
+        <option>PI</option>
+        <option>Hull viewer</option>
+        <option>Text</option>
+        <option>Shape</option>
+        <option>Other</option>
+      </select>
+    </label><br>
+    <label>Issue explanation:<br><textarea name="issue"></textarea></label><br>
+    <label><input type="checkbox" name="skip"> Skip this row</label><br><br>
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>
