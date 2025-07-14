@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Issue Form</title>
 </head>
 <body>
-  <h2>Issue Submission Form</h2>
+  <h2>Issue Submission</h2>
   <form id="issueForm">
-    <label>Project:<br><input type="text" name="project" required></label><br>
-    <label>Cadmatic Hull:<br><input type="text" name="hull" required></label><br>
-    <label>Block №:<br><input type="text" name="block" required></label><br>
-    <label>Content Type:<br>
-      <select name="type">
+    <label>From:<br><input type="email" id="from" required /></label><br><br>
+    <label>Project:<br><input type="text" id="project" required /></label><br><br>
+    <label>Hull:<br><input type="text" id="hull" required /></label><br><br>
+    <label>Block:<br><input type="text" id="block" required /></label><br><br>
+    <label>Type:<br>
+      <select id="type">
         <option>Settings</option>
         <option>Model</option>
         <option>PI</option>
@@ -20,49 +21,46 @@
         <option>Shape</option>
         <option>Other</option>
       </select>
-    </label><br>
-    <label>Issue explanation:</label>
-<div id="issue" contenteditable="true" style="
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  min-height: 100px;
-  background: #fff;
-"></div>
-    <label><input type="checkbox" name="skip"> Skip this row</label><br><br>
-    <button type="submit">Send</button>
+    </label><br><br>
+    <label>Issue (you can paste images):<br>
+      <div id="issue" contenteditable="true" style="border:1px solid #ccc;padding:10px;min-height:100px;"></div>
+    </label><br><br>
+    <label>Skip:<br><input type="text" id="skip" /></label><br><br>
+    <button type="submit">Submit</button>
   </form>
 
-  <div id="response" style="margin-top: 10px; color: green;"></div>
-
   <script>
-    const form = document.getElementById("issueForm");
-
-    form.addEventListener("submit", function (e) {
+    const form = document.getElementById('issueForm');
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(form);
-      const data = {};
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
+      const data = {
+        from: document.getElementById('from').value,
+        project: document.getElementById('project').value,
+        hull: document.getElementById('hull').value,
+        block: document.getElementById('block').value,
+        type: document.getElementById('type').value,
+        issue: document.getElementById('issue').innerHTML,
+        skip: document.getElementById('skip').value
+      };
 
-      fetch("https://prod-60.westeurope.logic.azure.com:443/workflows/e37f8fe0c5bb4b548205516cd863771d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YvRTLvHIAHEQFq89zD_Spkbxjpm7QTujYvpTn5KnJNQ", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.ok ? res.text() : Promise.reject(res.statusText))
-      .then(() => {
-        document.getElementById("response").innerText = "✅ Успешно отправлено!";
-        form.reset();
-      })
-      .catch(err => {
-        document.getElementById("response").innerText = "❌ Ошибка: " + err;
-        document.getElementById("response").style.color = "red";
-      });
+      try {
+        const response = await fetch("https://prod-60.westeurope.logic.azure.com:443/workflows/e37f8fe0c5bb4b548205516cd863771d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YvRTLvHIAHEQFq89zD_Spkbxjpm7QTujYvpTn5KnJNQ", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          alert("Issue submitted successfully!");
+        } else {
+          alert("Submission failed: " + response.statusText);
+        }
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
     });
   </script>
 </body>
