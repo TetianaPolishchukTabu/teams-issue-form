@@ -40,11 +40,16 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const formData = new FormData(form);
-      const data = {};
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
+      const data = {
+  project: formData.get("project"),
+  hull: formData.get("hull"),
+  block: formData.get("block"),
+  type: formData.get("type"),
+  issue: formData.get("issue"),
+  skip: formData.get("skip") === "on",
+  from: formData.get("from") || "неизвестно"
+};
+
 
       fetch("https://prod-60.westeurope.logic.azure.com:443/workflows/e37f8fe0c5bb4b548205516cd863771d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YvRTLvHIAHEQFq89zD_Spkbxjpm7QTujYvpTn5KnJNQ", {
         method: "POST",
