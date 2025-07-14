@@ -7,9 +7,9 @@
 <body>
   <h2>Issue Submission Form</h2>
   <form id="issueForm">
-    <label>Project:<br><input type="text" name="project"></label><br>
-    <label>Cadmatic Hull:<br><input type="text" name="hull"></label><br>
-    <label>Block №:<br><input type="text" name="block"></label><br>
+    <label>Project:<br><input type="text" name="project" required></label><br>
+    <label>Cadmatic Hull:<br><input type="text" name="hull" required></label><br>
+    <label>Block №:<br><input type="text" name="block" required></label><br>
     <label>Content Type:<br>
       <select name="type">
         <option>Settings</option>
@@ -22,18 +22,22 @@
       </select>
     </label><br>
     <label>Issue explanation:</label>
-    <div id="issue" contenteditable="true" style="
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    min-height: 100px;
-    background: #fff;
-   "></div>
-  <button type="submit">Send</button>
+<div id="issue" contenteditable="true" style="
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  min-height: 100px;
+  background: #fff;
+"></div>
+    <label><input type="checkbox" name="skip"> Skip this row</label><br><br>
+    <button type="submit">Send</button>
   </form>
-  <div id="response"></div>
+
+  <div id="response" style="margin-top: 10px; color: green;"></div>
+
   <script>
     const form = document.getElementById("issueForm");
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -43,22 +47,21 @@
         data[key] = value;
       });
 
-      fetch("https://prod-60.westeurope.logic.azure.com:443/workflows/e37f8fe0c5bb4b548205516cd863771d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YvRTLvHIAHEQFq89zD_Spkbxjpm7QTujYvpTn5KnJNQ", {
+      fetch("https://prod-128.westeurope.logic.azure.com:443/workflows/e7d6ca17e77c4135b6a0cf4e3fea3ffa/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1GZlHI_vOmSS-2Ch7mK3LZllnPhqpxIGP0QN89-_VO0", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
       })
-      .then(res => {
-        if (!res.ok) throw new Error("Ошибка: " + res.status);
-        return res.text();
+      .then(res => res.ok ? res.text() : Promise.reject(res.statusText))
+      .then(() => {
+        document.getElementById("response").innerText = "✅ Успешно отправлено!";
+        form.reset();
       })
-      .then(result => {
-        document.getElementById("response").innerHTML = "✅ Успешно отправлено!";
-      })
-      .catch(error => {
-        document.getElementById("response").innerHTML = "❌ Ошибка: " + error;
+      .catch(err => {
+        document.getElementById("response").innerText = "❌ Ошибка: " + err;
+        document.getElementById("response").style.color = "red";
       });
     });
   </script>
