@@ -1,6 +1,4 @@
-# Перегенерация HTML-файла формы с поддержкой загрузки скриншота на Imgur
 
-html_with_imgur = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,11 +99,3 @@ html_with_imgur = """
   </script>
 </body>
 </html>
-"""
-
-# Сохраняем HTML-файл
-from pathlib import Path
-file_path = Path("/mnt/data/issue_form_with_imgur_upload.html")
-file_path.write_text(html_with_imgur, encoding="utf-8")
-
-file_path.name
